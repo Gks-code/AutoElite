@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoElite - Veículos Premium</title>
+    <style>
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px 0;
+            font-size: 18px;
+            color: #6b7280;
+        }
+        
+        .filter-select {
+            cursor: pointer;
+        }
+        
+        .filter-select:hover {
+            border-color: #d69e2e;
+        }
+        
+        .active-filter {
+            border-color: #d69e2e;
+            background-color: #fef9e7;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #111827;
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        @media (min-width: 768px) {
+            .header-content {
+                flex-direction: row;
+            }
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .logo {
+                margin-bottom: 0;
+            }
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: #d69e2e;
+        }
+        
+        .logo p {
+            margin-left: 15px;
+            color: #d1d5db;
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .logo p {
+                display: block;
+            }
+        }
+        
+        .header-contact {
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-info {
+            display: none;
+            margin-right: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .contact-info {
+                display: block;
+            }
+        }
+        
+        .contact-info p:first-child {
+            color: #d1d5db;
+            font-size: 14px;
+        }
+        
+        .contact-button {
+            background-color: #d69e2e;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-button:hover {
+            background-color: #b7791f;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background-color: #1f2937;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .hero h2 {
+                font-size: 48px;
+            }
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: #d1d5db;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-container {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 768px) {
+            .search-container {
+                flex-direction: row;
+            }
+        }
+        
+        .search-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            color: #111827;
+            font-size: 16px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+        }
+        
+        .search-button {
+            background-color: #d69e2e;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 8px;
+        }
+        
+        @media (min-width: 768px) {
+            .search-button {
+                margin-top: 0;
+                margin-left: 8px;
+            }
+        }
+        
+        .search-button:hover {
+            background-color: #b7791f;
+        }
+        
+        /* Filters Section */
+        .filters {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .filters-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .filters-container {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 0;
+            }
+        }
+        
+        .filters h3 {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .filter-select {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px;
+            color: #374151;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        /* Inventory Section */
+        .inventory {
+            padding: 50px 0;
+            background-color: #f9fafb;
+        }
+        
+        .inventory h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .cars-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .cars-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .cars-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .car-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .car-image {
+            position: relative;
+        }
+        
+        .car-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .car-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #d69e2e;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .badge-new {
+            background-color: #d69e2e;
+        }
+        
+        .badge-featured {
+            background-color: #ef4444;
+        }
+        
+        .badge-promo {
+            background-color: #3b82f6;
+        }
+        
+        .car-details {
+            padding: 20px;
+        }
+        
+        .car-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .car-title h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .car-title p {
+            color: #6b7280;
+        }
+        
+        .car-transmission {
+            background-color: #f3f4f6;
+            color: #374151;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .car-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .car-price p:first-child {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .car-price p:last-child {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .whatsapp-button {
+            background-color: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .whatsapp-button:hover {
+            background-color: #059669;
+        }
+        
+        .whatsapp-button svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+        
+        .view-more {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .view-more-button {
+            background-color: #111827;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .view-more-button:hover {
+            background-color: #1f2937;
+        }
+        
+        /* Simulator Section */
+        .simulator {
+            padding: 50px 0;
+            background-color: #f3f4f6;
+        }
+        
+        .simulator h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .simulator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .simulator-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .simulator-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .simulator-label {
+            display: block;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        
+        .simulator-range {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            appearance: none;
+            outline: none;
+        }
+        
+        .simulator-range::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background-color: #d69e2e;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .range-value {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .simulator-select {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 12px;
+            color: #374151;
+        }
+        
+        .simulator-results {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .simulator-results h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 15px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .result-item p:first-child {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .result-item p:last-child {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .simulator-button {
+            width: 100%;
+            background-color: #d69e2e;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .simulator-button:hover {
+            background-color: #b7791f;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 50px 0;
+            background-color: #1f2937;
+            color: white;
+        }
+        
+        .features h2 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .feature-item {
+            text-align: center;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background-color: rgba(214, 158, 46, 0.1);
+        }
+        
+        .feature-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #d69e2e;
+        }
+        
+        .feature-item h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .feature-item p {
+            color: #d1d5db;
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            padding: 50px 0;
+            background-color: white;
+        }
+        
+        .testimonials h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .testimonials-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .testimonial-card {
+            background-color: #f9fafb;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        .testimonial-card.active {
+            opacity: 1;
+            position: relative;
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .testimonial-info {
+            margin-left: 20px;
+        }
+        
+        .testimonial-info h4 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .testimonial-info p {
+            color: #6b7280;
+        }
+        
+        .testimonial-text {
+            color: #374151;
+            font-style: italic;
+            line-height: 1.7;
+        }
+        
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #d1d5db;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .testimonial-dot.active {
+            background-color: #d69e2e;
+        }
+        
+        /* About Section */
+        .about {
+            padding: 50px 0;
+            background-color: #f3f4f6;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        @media (min-width: 768px) {
+            .about-content {
+                flex-direction: row;
+            }
+        }
+        
+        .about-text {
+            margin-bottom: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .about-text {
+                width: 50%;
+                padding-right: 30px;
+                margin-bottom: 0;
+            }
+        }
+        
+        .about h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+        
+        .about p {
+            color: #374151;
+            margin-bottom: 15px;
+        }
+        
+        .about-image {
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .about-image {
+                width: 50%;
+            }
+        }
+        
+        .about-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #111827;
+            color: white;
+            padding-top: 50px;
+            padding-bottom: 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .footer-logo h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .footer-logo h3 span {
+            color: #d69e2e;
+        }
+        
+        .footer-logo p {
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            color: #9ca3af;
+            transition: color 0.3s;
+        }
+        
+        .social-link:hover {
+            color: white;
+        }
+        
+        .social-link svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        .footer-links h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-contact h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .footer-contact ul {
+            list-style: none;
+        }
+        
+        .footer-contact li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-contact svg {
+            width: 20px;
+            height: 20px;
+            color: #d69e2e;
+            margin-right: 10px;
+        }
+        
+        .footer-contact span {
+            color: #9ca3af;
+        }
+        
+        .footer-hours h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .footer-hours ul {
+            list-style: none;
+            color: #9ca3af;
+        }
+        
+        .footer-hours li {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .footer-divider {
+            border-top: 1px solid #1f2937;
+            padding-top: 30px;
+            text-align: center;
+            color: #9ca3af;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Auto<span>Elite</span></h1>
+                    <p>Veículos premium com excelente procedência</p>
+                </div>
+                <div class="header-contact">
+                    <div class="contact-info">
+                        <p>Atendimento</p>
+                        <p>(11) 98765-4321</p>
+                    </div>
+                    <button class="contact-button">Contato</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+   <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Encontre o carro dos seus sonhos</h2>
+                <p>Veículos revisados e com a melhor procedência do mercado</p>
+                
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Buscar por marca ou modelo..." class="search-input">
+                        <button id="search-button" class="search-button">Buscar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <nav class="filters">
+        <div class="container">
+            <div class="filters-container">
+                <h3>Filtrar por:</h3>
+                
+                <select id="filter-brand" class="filter-select">
+                    <option value="">Todas as marcas</option>
+                    <option value="BMW">BMW</option>
+                    <option value="Mercedes-Benz">Mercedes</option>
+                    <option value="Audi">Audi</option>
+                    <option value="Volvo">Volvo</option>
+                    <option value="Land Rover">Land Rover</option>
+                    <option value="Porsche">Porsche</option>
+                </select>
+                
+                <select id="filter-year" class="filter-select">
+                    <option value="">Todos os anos</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                </select>
+                
+                <select id="filter-price" class="filter-select">
+                    <option value="">Todos os preços</option>
+                    <option value="0-100000">Até R$ 100.000</option>
+                    <option value="100000-200000">R$ 100.000 - R$ 200.000</option>
+                    <option value="200000-300000">R$ 200.000 - R$ 300.000</option>
+                    <option value="300000-500000">R$ 300.000 - R$ 500.000</option>
+                    <option value="500000-1000000">R$ 500.000+</option>
+                </select>
+                
+                <select id="filter-transmission" class="filter-select">
+                    <option value="">Tipo de câmbio</option>
+                    <option value="Automático">Automático</option>
+                    <option value="Manual">Manual</option>
+                </select>
+                
+                <select id="filter-fuel" class="filter-select">
+                    <option value="">Tipo de combustível</option>
+                    <option value="Gasolina">Gasolina</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Flex">Flex</option>
+                    <option value="Híbrido">Híbrido</option>
+                    <option value="Elétrico">Elétrico</option>
+                </select>
+                
+                <button id="reset-filters" class="contact-button" style="margin-left: 10px;">
+                    Limpar Filtros
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Inventory Section -->
+    <main class="inventory">
+        <div class="container">
+            <h2>Nossos Veículos</h2>
+            
+            <div class="cars-grid">
+                <!-- Car Card 1 -->
+                <div class="car-card fade-in">
+                    <div class="car-image">
+                        <img src="https://via.placeholder.com/600x400/cccccc/333333?text=BMW+M5" alt="BMW M5">
+                        <span class="car-badge badge-new">NOVO</span>
+                    </div>
+                    <div class="car-details">
+                        <div class="car-header">
+                            <div class="car-title">
+                                <h3>BMW M5 Competition</h3>
+                                <p>2022 • 12.000 km</p>
+                            </div>
+                            <span class="car-transmission">Automático</span>
+                        </div>
+                        
+                        <div class="car-footer">
+                            <div class="car-price">
+                                <p>Gasolina</p>
+                                <p>R$ 699.900</p>
+                            </div>
+                            <button class="whatsapp-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Car Card 2 -->
+                <div class="car-card fade-in">
+                    <div class="car-image">
+                        <img src="https://via.placeholder.com/600x400/cccccc/333333?text=Mercedes+GLE" alt="Mercedes GLE">
+                    </div>
+                    <div class="car-details">
+                        <div class="car-header">
+                            <div class="car-title">
+                                <h3>Mercedes-Benz GLE 450</h3>
+                                <p>2021 • 25.000 km</p>
+                            </div>
+                            <span class="car-transmission">Automático</span>
+                        </div>
+                        
+                        <div class="car-footer">
+                            <div class="car-price">
+                                <p>Gasolina</p>
+                                <p>R$ 589.900</p>
+                            </div>
+                            <button class="whatsapp-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Car Card 3 -->
+                <div class="car-card fade-in">
+                    <div class="car-image">
+                        <img src="https://via.placeholder.com/600x400/cccccc/333333?text=Audi+Q8" alt="Audi Q8">
+                        <span class="car-badge badge-featured">DESTAQUE</span>
+                    </div>
+                    <div class="car-details">
+                        <div class="car-header">
+                            <div class="car-title">
+                                <h3>Audi Q8 55 TFSI</h3>
+                                <p>2020 • 30.000 km</p>
+                            </div>
+                            <span class="car-transmission">Automático</span>
+                        </div>
+                        
+                        <div class="car-footer">
+                            <div class="car-price">
+                                <p>Gasolina</p>
+                                <p>R$ 499.900</p>
+                            </div>
+                            <button class="whatsapp-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Car Card 4 -->
+                <div class="car-card fade-in">
+                    <div class="car-image">
+                        <img src="https://via.placeholder.com/600x400/cccccc/333333?text=Volvo+XC90" alt="Volvo XC90">
+                    </div>
+                    <div class="car-details">
+                        <div class="car-header">
+                            <div class="car-title">
+                                <h3>Volvo XC90 T8</h3>
+                                <p>2021 • 18.000 km</p>
+                            </div>
+                            <span class="car-transmission">Automático</span>
+                        </div>
+                        
+                        <div class="car-footer">
+                            <div class="car-price">
+                                <p>Híbrido</p>
+                                <p>R$ 459.900</p>
+                            </div>
+                            <button class="whatsapp-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Car Card 5 -->
+                <div class="car-card fade-in">
+                    <div class="car-image">
+                        <img src="https://via.placeholder.com/600x400/cccccc/333333?text=Land+Rover+Defender" alt="Land Rover Defender">
+                        <span class="car-badge badge-promo">PROMOÇÃO</span>
+                    </div>
+                    <div class="car-details">
+                        <div class="car-header">
+                            <div class="car-title">
+                                <h3>Land Rover Defender 110</h3>
+                                <p>2021 • 22.000 km</p>
+                            </div>
+                            <span class="car-transmission">Automático</span>
+                        </div>
+                        
+                        <div class="car-footer">
+                            <div class="car-price">
+                                <p>Diesel</p>
+                                <p>R$ 549.900</p>
+                            </div>
+                            <button class="whatsapp-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Car Card 6 -->
+                <div class="car-card fade-in">
+                    <div class="car-image">
+                        <img src="https://via.placeholder.com/600x400/cccccc/333333?text=Porsche+Cayenne" alt="Porsche Cayenne">
+                    </div>
+                    <div class="car-details">
+                        <div class="car-header">
+                            <div class="car-title">
+                                <h3>Porsche Cayenne S</h3>
+                                <p>2019 • 35.000 km</p>
+                            </div>
+                            <span class="car-transmission">Automático</span>
+                        </div>
+                        
+                        <div class="car-footer">
+                            <div class="car-price">
+                                <p>Gasolina</p>
+                                <p>R$ 489.900</p>
+                            </div>
+                            <button class="whatsapp-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="view-more">
+                <button class="view-more-button">Ver mais veículos</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Simulator Section -->
+    <section class="simulator">
+    <div class="container">
+        <h2>Simulador de Financiamento</h2>
+        
+        <div class="simulator-container">
+            <div class="simulator-grid">
+                <div>
+                    <div class="mb-4">
+                        <label class="simulator-label">Valor do veículo</label>
+                        <input type="range" min="50000" max="1000000" step="10000" value="300000" 
+                               class="simulator-range">
+                        <div class="range-labels">
+                            <span>R$ 50.000</span>
+                            <span>R$ 1.000.000</span>
+                        </div>
+                        <div class="range-value">
+                            <span>R$ 300.000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="simulator-label">Entrada</label>
+                        <input type="range" min="0" max="100" step="5" value="30" 
+                               class="simulator-range">
+                        <div class="range-labels">
+                            <span>0%</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="range-value">
+                            <span>30% (R$ 90.000)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4">
+                        <label class="simulator-label">Parcelas</label>
+                        <select class="simulator-select">
+                            <option>12 meses</option>
+                            <option>24 meses</option>
+                            <option selected>36 meses</option>
+                            <option>48 meses</option>
+                            <option>60 meses</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="simulator-label">Taxa de juros</label>
+                        <select class="simulator-select">
+                            <option>1,2% ao mês</option>
+                            <option selected>1,5% ao mês</option>
+                            <option>1,8% ao mês</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="simulator-results">
+                <h3>Resultado da Simulação</h3>
+                
+                <div class="results-grid">
+                    <div>
+                        <p class="result-label">Valor financiado</p>
+                        <p class="result-value">R$ 210.000</p>
+                    </div>
+                    <div>
+                        <p class="result-label">Parcela mensal</p>
+                        <p class="result-value">R$ 7.246,15</p>
+                    </div>
+                    <div>
+                        <p class="result-label">Total com juros</p>
+                        <p class="result-value">R$ 260.861,40</p>
+                    </div>
+                    <div>
+                        <p class="result-label">CET mensal</p>
+                        <p class="result-value">1,72%</p>
+                    </div>
+                </div>
+                
+                <button class="simulator-button">
+                    Solicitar financiamento
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="features">
+    <div class="container">
+        <h2>Por que comprar na AutoElite?</h2>
+        
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <h3>Garantia de Qualidade</h3>
+                <p>Todos os veículos passam por rigorosa inspeção técnica e revisão completa.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3>Melhor Custo-Benefício</h3>
+                <p>Preços competitivos e condições de pagamento flexíveis para você.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                </div>
+                <h3>Financiamento Facilitado</h3>
+                <p>Parcerias com os melhores bancos para aprovação rápida do seu crédito.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3>Histórico Completo</h3>
+                <p>Documentação 100% regularizada e histórico de manutenções disponível.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                </div>
+                <h3>Acessórios Originais</h3>
+                <p>Manutenção com peças originais e acessórios de fábrica preservados.</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h3>Segurança Garantida</h3>
+                <p>Procedência verificada e todo o suporte pós-venda que você precisa.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials">
+    <div class="container">
+        <h2>O que nossos clientes dizem</h2>
+        
+        <div class="testimonials-container">
+            <div class="testimonial-card active">
+                <div class="testimonial-header">
+                    <img src="https://via.placeholder.com/80/cccccc/333333?text=Cliente+1" 
+                         alt="Cliente" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4>Roberto Silva</h4>
+                        <p>Comprou um BMW X5</p>
+                    </div>
+                </div>
+                <p class="testimonial-text">
+                    "Comprei meu BMW na AutoElite e fiquei impressionado com a transparência no processo. 
+                    O carro estava exatamente como descrito, com toda documentação em ordem. 
+                    Recomendo a todos que buscam veículos premium com procedência garantida."
+                </p>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <img src="https://via.placeholder.com/80/cccccc/333333?text=Cliente+2" 
+                         alt="Cliente" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4>Ana Paula Mendes</h4>
+                        <p>Comprou um Volvo XC60</p>
+                    </div>
+                </div>
+                <p class="testimonial-text">
+                    "Excelente atendimento desde o primeiro contato. Me ajudaram a encontrar o carro perfeito 
+                    dentro do meu orçamento e ainda conseguiram condições de financiamento melhores do que eu 
+                    esperava. O Volvo que comprei está impecável e superou minhas expectativas."
+                </p>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-header">
+                    <img src="https://via.placeholder.com/80/cccccc/333333?text=Cliente+3" 
+                         alt="Cliente" class="testimonial-avatar">
+                    <div class="testimonial-info">
+                        <h4>Carlos Eduardo</h4>
+                        <p>Comprou um Porsche Cayenne</p>
+                    </div>
+                </div>
+                <p class="testimonial-text">
+                    "Sempre tive receio de comprar carros usados, mas a AutoElite me surpreendeu. 
+                    O Porsche que adquiri passou por uma revisão completa e veio com garantia. 
+                    Há 6 meses com o carro e zero problemas. Sem dúvida voltarei quando quiser trocar de veículo."
+                </p>
+            </div>
+            
+            <div class="testimonial-dots">
+                <button class="testimonial-dot active"></button>
+                <button class="testimonial-dot"></button>
+                <button class="testimonial-dot"></button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Sobre a AutoElite</h2>
+                <p>
+                    A AutoElite é especializada em veículos premium com excelente procedência. 
+                    Nossa missão é conectar você ao carro dos seus sonhos, oferecendo transparência, 
+                    segurança e o melhor custo-benefício do mercado.
+                </p>
+                <p>
+                    Com anos de experiência no mercado automotivo, nossa equipe é formada por 
+                    especialistas apaixonados por carros e comprometidos em oferecer a melhor 
+                    experiência de compra.
+                </p>
+                <p>
+                    Todos os veículos em nosso estoque passam por rigorosa inspeção técnica e 
+                    revisão completa, garantindo que você leve para casa um carro em perfeitas 
+                    condições de uso.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="https://via.placeholder.com/600x400/cccccc/333333?text=AutoElite+Showroom" 
+                     alt="Showroom AutoElite">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer Section -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-logo">
+                <h3>Auto<span>Elite</span></h3>
+                <p>
+                    Veículos premium com excelente procedência e o melhor custo-benefício do mercado.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Links Úteis</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Estoque</a></li>
+                    <li><a href="#">Financiamento</a></li>
+                    <li><a href="#">Sobre Nós</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h4>Contato</h4>
+                <ul>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Av. Paulista, 1000 - São Paulo/SP</span>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                        </svg>
+                        <span>(11) 1234-5678</span>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                        </svg>
+                        <span>contato@autoelite.com.br</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="footer-hours">
+                <h4>Horário de Funcionamento</h4>
+                <ul>
+                    <li>
+                        <span>Segunda - Sexta</span>
+                        <span>09:00 - 18:00</span>
+                    </li>
+                    <li>
+                        <span>Sábado</span>
+                        <span>09:00 - 14:00</span>
+                    </li>
+                    <li>
+                        <span>Domingo</span>
+                        <span>Fechado</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-divider">
+            <p>&copy; 2023 AutoElite. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+
+    
+    // Dados dos veículos (substitua por dados reais ou API no futuro)
+        // Dados dos veículos
+        const vehicles = [
+            {
+                id: 1,
+                marca: "BMW",
+                modelo: "M5 Competition",
+                ano: "2022",
+                km: "12.000",
+                combustivel: "Gasolina",
+                cambio: "Automático",
+                preco: 699900,
+                imagem: "umacarro.jpg",
+                badge: "NOVO",
+                badgeClass: "badge-new"
+            },
+            {
+                id: 2,
+                marca: "Mercedes-Benz",
+                modelo: "GLE 450",
+                ano: "2021",
+                km: "25.000",
+                combustivel: "Gasolina",
+                cambio: "Automático",
+                preco: 589900,
+                imagem: "umacarro.jpg",
+                badge: "",
+                badgeClass: ""
+            },
+            {
+                id: 3,
+                marca: "Audi",
+                modelo: "Q8 55 TFSI",
+                ano: "2020",
+                km: "30.000",
+                combustivel: "Gasolina",
+                cambio: "Automático",
+                preco: 499900,
+                imagem: "umacarro.jpg",
+                badge: "DESTAQUE",
+                badgeClass: "badge-featured"
+            },
+            {
+                id: 4,
+                marca: "Volvo",
+                modelo: "XC90 T8",
+                ano: "2021",
+                km: "18.000",
+                combustivel: "Híbrido",
+                cambio: "Automático",
+                preco: 459900,
+                imagem: "umacarro.jpg",
+                badge: "",
+                badgeClass: ""
+            },
+            {
+                id: 5,
+                marca: "Land Rover",
+                modelo: "Defender 110",
+                ano: "2021",
+                km: "22.000",
+                combustivel: "Diesel",
+                cambio: "Automático",
+                preco: 549900,
+                imagem: "umacarro.jpg",
+                badge: "PROMOÇÃO",
+                badgeClass: "badge-promo"
+            },
+            {
+                id: 6,
+                marca: "Porsche",
+                modelo: "Cayenne S",
+                ano: "2019",
+                km: "35.000",
+                combustivel: "Gasolina",
+                cambio: "Automático",
+                preco: 189900,
+                imagem: "umacarro.jpg",
+                badge: "",
+                badgeClass: ""
+            },
+            {
+                id: 7,  // Incremente o ID
+                marca: "Tesla",
+                modelo: "Model S Plaid",
+                ano: "2023",
+                km: "5.000",
+                combustivel: "Elétrico",
+                cambio: "Automático",
+                preco: 899900,  // Preço como número (sem pontos ou R$)
+                imagem: "umacarro.jpg",
+                badge: "",  // Opcional (deixe vazio se não quiser)
+                badgeClass: "badge-new"  // Classe CSS para o badge
+            },
+            
+        ];
+
+        // Elementos do DOM
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const carsGrid = document.querySelector('.cars-grid');
+        
+        // Elementos dos filtros
+        const filterBrand = document.getElementById('filter-brand');
+        const filterYear = document.getElementById('filter-year');
+        const filterPrice = document.getElementById('filter-price');
+        const filterTransmission = document.getElementById('filter-transmission');
+        const filterFuel = document.getElementById('filter-fuel');
+        const resetFiltersButton = document.getElementById('reset-filters');
+
+        // Função para aplicar todos os filtros
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const brand = filterBrand.value;
+            const year = filterYear.value;
+            const priceRange = filterPrice.value;
+            const transmission = filterTransmission.value;
+            const fuel = filterFuel.value;
+            
+            // Marcar filtros ativos
+            markActiveFilters();
+            
+            // Filtrar veículos
+            let filteredVehicles = vehicles.filter(vehicle => {
+                // Filtro de busca
+                if (searchTerm) {
+                    const fullName = `${vehicle.marca} ${vehicle.modelo}`.toLowerCase();
+                    if (!fullName.includes(searchTerm)) {
+                        return false;
+                    }
+                }
+                
+                // Filtro de marca
+                if (brand && vehicle.marca !== brand) {
+                    return false;
+                }
+                
+                // Filtro de ano
+                if (year && vehicle.ano !== year) {
+                    return false;
+                }
+                
+                // Filtro de preço
+                if (priceRange) {
+                    const [min, max] = priceRange.split('-').map(Number);
+                    if (max) {
+                        if (vehicle.preco < min || vehicle.preco > max) {
+                            return false;
+                        }
+                    } else {
+                        if (vehicle.preco < min) {
+                            return false;
+                        }
+                    }
+                }
+                
+                // Filtro de câmbio
+                if (transmission && vehicle.cambio !== transmission) {
+                    return false;
+                }
+                
+                // Filtro de combustível
+                if (fuel && vehicle.combustivel !== fuel) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            renderVehicles(filteredVehicles);
+        }
+
+        // Função para marcar filtros ativos
+        function markActiveFilters() {
+            const filters = [
+                filterBrand, 
+                filterYear, 
+                filterPrice, 
+                filterTransmission, 
+                filterFuel
+            ];
+            
+            filters.forEach(filter => {
+                if (filter.value) {
+                    filter.classList.add('active-filter');
+                } else {
+                    filter.classList.remove('active-filter');
+                }
+            });
+        }
+
+        // Função para resetar todos os filtros
+        function resetFilters() {
+            searchInput.value = '';
+            filterBrand.value = '';
+            filterYear.value = '';
+            filterPrice.value = '';
+            filterTransmission.value = '';
+            filterFuel.value = '';
+            
+            markActiveFilters();
+            applyFilters();
+        }
+
+        // Função para renderizar os veículos
+        function renderVehicles(vehiclesToRender) {
+            carsGrid.innerHTML = '';
+            
+            if (vehiclesToRender.length === 0) {
+                carsGrid.innerHTML = '<div class="no-results">Nenhum veículo encontrado com os critérios selecionados.</div>';
+                return;
+            }
+            
+            vehiclesToRender.forEach(vehicle => {
+                const carCard = document.createElement('div');
+                carCard.className = 'car-card fade-in';
+                carCard.innerHTML = `
+                    <div class="car-image">
+                        <img src="${vehicle.imagem}" alt="${vehicle.marca} ${vehicle.modelo}">
+                        ${vehicle.badge ? `<span class="car-badge ${vehicle.badgeClass}">${vehicle.badge}</span>` : ''}
+                    </div>
+                    <div class="car-details">
+                        <div class="car-header">
+                            <div class="car-title">
+                                <h3>${vehicle.marca} ${vehicle.modelo}</h3>
+                                <p>${vehicle.ano} • ${vehicle.km} km</p>
+                            </div>
+                            <span class="car-transmission">${vehicle.cambio}</span>
+                        </div>
+                        
+                        <div class="car-footer">
+                            <div class="car-price">
+                                <p>${vehicle.combustivel}</p>
+                                <p>R$ ${vehicle.preco.toLocaleString('pt-BR')}</p>
+                            </div>
+                            <button class="whatsapp-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+                                </svg>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                `;
+                carsGrid.appendChild(carCard);
+            });
+        }
+
+        // Event listeners
+        searchButton.addEventListener('click', applyFilters);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+        
+        // Filtros
+        filterBrand.addEventListener('change', applyFilters);
+        filterYear.addEventListener('change', applyFilters);
+        filterPrice.addEventListener('change', applyFilters);
+        filterTransmission.addEventListener('change', applyFilters);
+        filterFuel.addEventListener('change', applyFilters);
+        resetFiltersButton.addEventListener('click', resetFilters);
+
+        // Inicializa a página com todos os veículos
+        renderVehicles(vehicles);
+
+        // [O restante do JavaScript anterior permanece igual]
+        // Testimonial Carousel
+        const testimonials = document.querySelectorAll('.testimonial-card');
+        const dots = document.querySelectorAll('.testimonial-dot');
+        let currentTestimonial = 0;
+        
+        function showTestimonial(index) {
+            testimonials.forEach(testimonial => testimonial.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            testimonials[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentTestimonial = index;
+        }
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => showTestimonial(index));
+        });
+        
+        // Auto-rotate testimonials
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(currentTestimonial);
+        }, 5000);
+        
+        // Simulator calculations
+        const vehicleValueInput = document.querySelectorAll('.simulator-range')[0];
+        const downPaymentInput = document.querySelectorAll('.simulator-range')[1];
+        const installmentSelect = document.querySelector('.simulator-select');
+        const resultValues = document.querySelectorAll('.result-value');
+        
+        function updateSimulation() {
+            const vehicleValue = parseInt(vehicleValueInput.value);
+            const downPaymentPercent = parseInt(downPaymentInput.value);
+            const downPaymentValue = vehicleValue * downPaymentPercent / 100;
+            const financedValue = vehicleValue - downPaymentValue;
+            
+            // Simple interest calculation (for demo purposes)
+            const interestRate = 0.015; // 1.5% per month
+            const installments = 36; // Default to 36 months
+            const monthlyRate = Math.pow(1 + interestRate, installments);
+            const monthlyPayment = financedValue * monthlyRate * interestRate / (monthlyRate - 1);
+            const totalWithInterest = monthlyPayment * installments;
+            
+            // Update displayed values
+            document.querySelectorAll('.range-value')[0].textContent = `R$ ${vehicleValue.toLocaleString('pt-BR')}`;
+            document.querySelectorAll('.range-value')[1].textContent = `${downPaymentPercent}% (R$ ${downPaymentValue.toLocaleString('pt-BR')})`;
+            
+            resultValues[0].textContent = `R$ ${financedValue.toLocaleString('pt-BR')}`;
+            resultValues[1].textContent = `R$ ${monthlyPayment.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            resultValues[2].textContent = `R$ ${totalWithInterest.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            resultValues[3].textContent = `1,72%`;
+        }
+        
+        vehicleValueInput.addEventListener('input', updateSimulation);
+        downPaymentInput.addEventListener('input', updateSimulation);
+        installmentSelect.addEventListener('change', updateSimulation);
+        
+        // Initialize simulation
+        updateSimulation();
+</script>        
+
+
